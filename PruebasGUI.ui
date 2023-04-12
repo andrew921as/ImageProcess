@@ -6,9 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1036</width>
-    <height>600</height>
+    <width>1016</width>
+    <height>625</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -32,8 +41,8 @@
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>991</width>
-      <height>101</height>
+      <width>691</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="font">
@@ -254,7 +263,7 @@ OF ALL THE TIMES</string>
      <number>1</number>
     </property>
     <property name="maximum">
-     <number>99</number>
+     <number>400</number>
     </property>
     <property name="value">
      <number>1</number>
@@ -336,6 +345,9 @@ OF ALL THE TIMES</string>
       <height>22</height>
      </rect>
     </property>
+    <property name="maximum">
+     <number>240</number>
+    </property>
    </widget>
    <widget class="QSpinBox" name="ySpinB">
     <property name="enabled">
@@ -349,6 +361,9 @@ OF ALL THE TIMES</string>
       <height>22</height>
      </rect>
     </property>
+    <property name="maximum">
+     <number>240</number>
+    </property>
    </widget>
    <widget class="QSpinBox" name="zSpinB">
     <property name="enabled">
@@ -361,6 +376,9 @@ OF ALL THE TIMES</string>
       <width>42</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <number>150</number>
     </property>
    </widget>
    <widget class="QLabel" name="labeStartP">
@@ -447,13 +465,56 @@ OF ALL THE TIMES</string>
      <string>Z</string>
     </property>
    </widget>
+   <widget class="QSpinBox" name="iterationsSpinB">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>330</y>
+      <width>71</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>99</number>
+    </property>
+    <property name="value">
+     <number>1</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelIterations">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>290</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Iterations</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1036</width>
+     <width>1016</width>
      <height>21</height>
     </rect>
    </property>

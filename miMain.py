@@ -4,7 +4,7 @@ import sys
 import os
 from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QMainWindow, QApplication
-from thresholding import isodata, regionGrowing
+from thresholding import isodata, regionGrowing, kMeans
 
 #Procesamiento de las imagenes
 import nibabel as nib
@@ -19,7 +19,9 @@ class MiEjemplo(QMainWindow):
       self.ejeY.valueChanged.connect(lambda: self.axesControl("ejeY"))
       self.ejeZ.valueChanged.connect(lambda: self.axesControl("ejeZ"))
       self.normalRB.toggled.connect(lambda: self.rbControls("normal"))  
-      self.isodataRB.toggled.connect(lambda: self.rbControls("isodata"))  
+      self.isodataRB.toggled.connect(lambda: self.rbControls("isodata"))
+      self.regionRB.toggled.connect(lambda: self.rbControls("regionG"))
+      self.kmeansRB.toggled.connect(lambda: self.rbControls("kMeans"))  
   
   def axesControl(self,axe):
     if(axe == "ejeX"):
@@ -45,6 +47,8 @@ class MiEjemplo(QMainWindow):
       self.xSpinB.setEnabled(False)
       self.ySpinB.setEnabled(False)
       self.zSpinB.setEnabled(False)
+      self.labelIterations.setEnabled(False)
+      self.iterationsSpinB.setEnabled(False)
     if rbName == "isodata":
       self.toleLabel.setEnabled(True)
       self.tauLabel.setEnabled(True)
@@ -57,6 +61,36 @@ class MiEjemplo(QMainWindow):
       self.xSpinB.setEnabled(False)
       self.ySpinB.setEnabled(False)
       self.zSpinB.setEnabled(False)
+      self.labelIterations.setEnabled(False)
+      self.iterationsSpinB.setEnabled(False)
+    if rbName == "regionG":
+      self.toleLabel.setEnabled(True)
+      self.tauLabel.setEnabled(False)
+      self.toleSpinB.setEnabled(True)
+      self.tauSpinB.setEnabled(False)
+      self.labeStartP.setEnabled(True)
+      self.startPX.setEnabled(True)
+      self.startPY.setEnabled(True)
+      self.startPZ.setEnabled(True)
+      self.xSpinB.setEnabled(True)
+      self.ySpinB.setEnabled(True)
+      self.zSpinB.setEnabled(True)
+      self.labelIterations.setEnabled(False)
+      self.iterationsSpinB.setEnabled(False)
+    if rbName == "kMeans":
+      self.toleLabel.setEnabled(False)
+      self.tauLabel.setEnabled(False)
+      self.toleSpinB.setEnabled(False)
+      self.tauSpinB.setEnabled(False)
+      self.labeStartP.setEnabled(False)
+      self.startPX.setEnabled(False)
+      self.startPY.setEnabled(False)
+      self.startPZ.setEnabled(False)
+      self.xSpinB.setEnabled(False)
+      self.ySpinB.setEnabled(False)
+      self.zSpinB.setEnabled(False)
+      self.labelIterations.setEnabled(True)
+      self.iterationsSpinB.setEnabled(True)
   
   def controlBoton(self):
       if (os.path.exists(self.inputLDireccionI.text()+".gz")):
@@ -78,13 +112,12 @@ class MiEjemplo(QMainWindow):
         if self.isodataRB.isChecked():
           valueTolerance = self.toleSpinB.value()
           valueTau = self.tauSpinB.value()
-          segmentated = imageAxes >= isodata(imageAxes,valueTolerance,valueTau)
-          # if(valueX>=0):
-          #   imageAxes = segmentated[valueX, :, :]
-          # elif(valueY>=0):
-          #   imageAxes = segmentated[:, valueY, :]
-          # elif(valueZ>=0):
-          #   imageAxes = segmentated[:, :, valueZ]        
+          segmentated = imageAxes >= isodata(imageAxes,valueTolerance,valueTau)      
+          plt.imshow(segmentated)
+          plt.show()
+        if self.kmeansRB.isChecked():
+          iterations = self.iterationsSpinB.value()
+          segmentated = kMeans(imageAxes,iterations)      
           plt.imshow(segmentated)
           plt.show()
           
