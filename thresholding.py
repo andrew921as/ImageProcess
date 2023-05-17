@@ -24,8 +24,29 @@ def isodata(image, tol, ta):
 			else:
 				tau = tau_post
 
-def regionGrowing (image, point):
-  return "hola"
+def regionGrowing (image, x, y, z, tol):
+	# Region Growing
+        segmentation = np.zeros_like(image)
+        if segmentation[x,y,z] == 1:
+            return
+        valor_medio_cluster = image[x,y,z]
+        segmentation[x,y,z] = 1
+        vecinos = [(x, y, z)]
+        while vecinos:
+            x, y, z = vecinos.pop()
+            for dx in [-1,0,1]:
+                for dy in [-1,0,1]:
+                    for dz in [-1,0,1]:
+                        #vecino
+                        nx, ny, nz = x + dx, y + dy, z + dz
+                        if nx >= 0 and nx < image.shape[0] and \
+                            ny >= 0 and ny < image.shape[1] and \
+                            nz >= 0 and nz < image.shape[2]:
+                            if np.abs(valor_medio_cluster - image[nx,ny,nz]) < tol and \
+                                segmentation[nx,ny,nz] == 0:
+                                segmentation[nx,ny,nz] = 1
+                                vecinos.append((nx, ny, nz))
+        return segmentation
 
 def kMeans (image, iterations,ks ):
 	# Inicialización de valores k
@@ -58,3 +79,15 @@ def kMeans (image, iterations,ks ):
 	# 	k3 = image[segmentation == 2].mean()
 	# 	return segmentation
 
+def borders(image_data):
+	dfdx = np.zeros_like(image_data)
+	dfdy = np.zeros_like(image_data)
+	dfdz = np.zeros_like(image_data)
+	for x in range(1, image_data.shape[0]-2) :
+		for y in range(1, image_data.shape[1]-2) :
+			for z in range(1, image_data.shape[2]-2) :
+				dfdx[x, y, z] = image_data[x+1, y, z]-image_data[x-1, y, z]
+				dfdy[x, y, z] = image_data[x, y+1, z]-image_data[x, y-1, z]
+				dfdz[x, y, z] = image_data[x, y, z+1]-image_data[x, y, z-1]
+	magnitude = np.sqrt(np.power(dfdx, 2) + np.power(dfdy, 2) + np.power(dfdz, 2))
+	return magnitude

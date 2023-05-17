@@ -10,8 +10,8 @@ from PyQt5.QtGui import QPixmap, QImage
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 #Funciones del programa
-from thresholding import isodata, regionGrowing, kMeans
-from preProcesing import Rescaling, ZScore, WhiteStripe
+from thresholding import isodata, regionGrowing, kMeans, borders
+from preProcesing import Rescaling, ZScore, WhiteStripe, histogramMatching
 from denoising import meanFilter,medianFilter,medianFilterBorders
 
 #Procesamiento de las imagenes
@@ -33,7 +33,8 @@ class MiEjemplo(QMainWindow):
       #Fin
       self.uploadButton.clicked.connect(self.uploadImage)
       self.showHisButton.clicked.connect(self.showHistogram)
-      self.showImageButton.clicked.connect(self.uploadImage)
+      self.showBordersButton.clicked.connect(self.showBorders)
+      self.showImageButton.clicked.connect(self.showImage)
       self.miPrimerBoton.clicked.connect(self.controlBoton)
       
       self.sliderX.valueChanged.connect(self.axeXControl)
@@ -66,7 +67,13 @@ class MiEjemplo(QMainWindow):
   
   def uploadImage(self):
     if (os.path.exists(self.inputLDireccionI.text()+".gz")):
-        imageUploaded = nib.load(self.inputLDireccionI.text()+".gz").get_fdata()
+        imageUploaded = nib.load("./Images/"+self.inputLDireccionI.text()+".gz").get_fdata()
+        if (self.inputLDireccionI.text() == "FLAIR.nii"):
+          targ = 1
+        elif (self.inputLDireccionI.text() == "IR.nii"):
+          targ = 2
+        else:
+          targ = 3
         imageStandarised=None
         histogram = None
         if self.rescalingRB.isChecked():
@@ -74,16 +81,19 @@ class MiEjemplo(QMainWindow):
         if self.zScoreRB.isChecked():
           imageStandarised, histogram= ZScore(imageUploaded)
         if self.whiteStripeRB.isChecked():
-          imageStandarised, histogram= WhiteStripe(imageUploaded)    
-        # if self.meanFilterRB.isChecked():
-        #   self.image= meanFilter(imageStandarised)
-        # if self.medianFilterRB.isChecked():
-        #   self.image= medianFilter(imageStandarised)
-        # if self.medianBorderFilterRB.isChecked():
-        #   self.image= medianFilterBorders(imageStandarised)
-        self.image = imageStandarised
-        self.normalImage = imageStandarised
-        self.normalHistogram = histogram
+          imageStandarised, histogram= WhiteStripe(imageUploaded)
+        if self.HistMatchRB.isChecked():
+          imageStandarised, histogram= histogramMatching(imageUploaded, targ)
+        
+        self.normalHistogram = histogram     
+        
+        if self.meanFilterRB.isChecked():
+          self.image= meanFilter(imageStandarised)
+        if self.medianFilterRB.isChecked():
+          self.image= medianFilter(imageStandarised)
+        if self.medianBorderFilterRB.isChecked():
+          self.image= medianFilterBorders(imageStandarised)
+        self.normalImage = self.image
         
         valueY = self.ejeY.value()
         imageAxes = self.image[:, valueY, :]
@@ -103,8 +113,15 @@ class MiEjemplo(QMainWindow):
   def showHistogram(self):
     self.plotOnCanvasH(self.normalHistogram)
   
+  def showBorders(self):
+    self.image = borders(self.normalImage)
+    imageAxes = self.myAxesI()
+    self.plotOnCanvas(imageAxes)
+  
   def showImage(self):
-    self.plotOnCanvas(self.image)
+    self.image=self.normalImage
+    imageAxes = self.myAxesI()
+    self.plotOnCanvas(imageAxes)
   
   def convert_numpy_to_qimage(self, image):
     """Convierte una imagen de formato numpy a QImage."""
@@ -237,22 +254,30 @@ class MiEjemplo(QMainWindow):
               
     if self.normalRB.isChecked():
       self.image = self.normalImage
-      myIAxes =self.myAxesI(self.image)      
+      myIAxes =self.myAxesI()      
       self.plotOnCanvas(myIAxes)         
     if self.isodataRB.isChecked():
       valueTolerance = self.toleSpinB.value()
       valueTau = self.tauSpinB.value()
       self.image = self.normalImage >= isodata(self.normalImage,valueTolerance,valueTau)      
-      myIAxes =self.myAxesI(self.image)
+      myIAxes =self.myAxesI()
       self.plotOnCanvas(myIAxes)
     if self.kmeansRB.isChecked():
       iterations = self.iterationsSpinB.value()
       ks = self.KsSpinB.value()
       self.image = kMeans(self.normalImage,iterations,ks)      
-      myIAxes =self.myAxesI(self.image)
+      myIAxes =self.myAxesI()
+      self.plotOnCanvas(myIAxes)
+    if self.regionRB.isChecked():
+      tolerance = self.toleSpinB.value()
+      x = self.xSpinB.value()
+      y = self.ySpinB.value()
+      z = self.zSpinB.value()
+      self.image = regionGrowing(self.normalImage,x,y,z,tolerance)      
+      myIAxes =self.myAxesI()
       self.plotOnCanvas(myIAxes)
 
-  def myAxesI(self,image):
+  def myAxesI(self):
     valueX = self.ejeX.value()
     valueY = self.ejeY.value()
     valueZ = self.ejeZ.value()
