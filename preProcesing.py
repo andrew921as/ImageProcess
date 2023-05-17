@@ -63,8 +63,6 @@ def histogramMatching(imgOrigin,target):
     # Aplicar el mapeo a los datos de la imagen de origen
     data_matched = np.interp(data_orig, bins[:-1], lut) 
     histogram = data_matched.flatten()
-    # Crear una nueva imagen con los datos estandarizados
-    # image_matched = nib.Nifti1Image(data_matched, imgOrigin.affine,imgOrigin.header)
-    # data = image_matched.get_fdata()
+
     return data_matched, histogram
   

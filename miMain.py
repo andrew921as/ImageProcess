@@ -76,6 +76,7 @@ class MiEjemplo(QMainWindow):
           targ = 3
         imageStandarised=None
         histogram = None
+        
         if self.rescalingRB.isChecked():
           imageStandarised, histogram= Rescaling(imageUploaded)
         if self.zScoreRB.isChecked():
