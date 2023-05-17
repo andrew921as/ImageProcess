@@ -10,5 +10,5 @@ Numpy
 Scipy
 
 
-##Para subir imagenes:
-Colocar las imagenes a utilizar en la carpeta Images, despues desde el programa cualquier imagen sera llamada buscandola en esa carpeta
+##To upload images:
+Place the images in the folder Images, in the program all the images are going to be search in this folder.
