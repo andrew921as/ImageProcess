@@ -66,7 +66,7 @@ class MiEjemplo(QMainWindow):
     self.canvas.draw()
   
   def uploadImage(self):
-    if (os.path.exists(self.inputLDireccionI.text()+".gz")):
+    if (os.path.exists("./Images/"+self.inputLDireccionI.text()+".gz")):
         imageUploaded = nib.load("./Images/"+self.inputLDireccionI.text()+".gz").get_fdata()
         if (self.inputLDireccionI.text() == "FLAIR.nii"):
           targ = 1
@@ -87,12 +87,16 @@ class MiEjemplo(QMainWindow):
         
         self.normalHistogram = histogram     
         
+        
         if self.meanFilterRB.isChecked():
           self.image= meanFilter(imageStandarised)
         if self.medianFilterRB.isChecked():
           self.image= medianFilter(imageStandarised)
         if self.medianBorderFilterRB.isChecked():
           self.image= medianFilterBorders(imageStandarised)
+        if self.noneFilterRB.isChecked():
+          self.image= imageStandarised
+          
         self.normalImage = self.image
         
         valueY = self.ejeY.value()

@@ -828,7 +828,7 @@ OF ALL THE TIMES</string>
     <widget class="QRadioButton" name="medianBorderFilterRB">
      <property name="geometry">
       <rect>
-       <x>160</x>
+       <x>150</x>
        <y>20</y>
        <width>121</width>
        <height>17</height>
@@ -839,6 +839,19 @@ OF ALL THE TIMES</string>
      </property>
      <property name="checked">
       <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="noneFilterRB">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>20</y>
+       <width>51</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>None</string>
      </property>
     </widget>
    </widget>
