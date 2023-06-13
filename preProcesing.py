@@ -35,7 +35,7 @@ def WhiteStripe(imageData):
 	histogram =imageDataRescaled.flatten()
 	return imageDataRescaled, histogram
 
-def histogramMatching(imgOrigin,target):
+def histogramMatching(imgOrigin,target, k):
     #histogram
     data_target = None
     if target == 1:
@@ -48,21 +48,18 @@ def histogramMatching(imgOrigin,target):
     data_orig = imgOrigin
 
     # Redimensionar los datos en un solo arreglo 1D
-    flat_orig = data_orig.flatten()
-    flat_target = data_target.flatten()
+    reference_flat = data_target.flatten()
+    transform_flat = data_orig.flatten()
+    
+    reference_landmarks = np.percentile(reference_flat, np.linspace(0, 100, k))
+    transform_landmarks = np.percentile(transform_flat, np.linspace(0, 100, k))
 
-    # Calcular los histogramas acumulativos
-    hist_orig, bins = np.histogram(flat_orig, bins=256, range=(0, 255), density=True)
-    hist_orig_cumulative = hist_orig.cumsum()
-    hist_target, _ = np.histogram(flat_target, bins=256, range=(0, 255), density=True)
-    hist_target_cumulative = hist_target.cumsum()
-
-    # Mapear los valores de la imagen de origen a los valores de la imagen objetivo
-    lut = np.interp(hist_orig_cumulative, hist_target_cumulative, bins[:-1])
+    
+    piecewise_func = np.interp(transform_flat, transform_landmarks, reference_landmarks)
+    transformed_data = piecewise_func.reshape(data_orig.shape)
 
     # Aplicar el mapeo a los datos de la imagen de origen
-    data_matched = np.interp(data_orig, bins[:-1], lut) 
-    histogram = data_matched.flatten()
+    histogram = transformed_data.flatten()
 
-    return data_matched, histogram
+    return transformed_data, histogram
   

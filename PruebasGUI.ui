@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1016</width>
-    <height>746</height>
+    <width>1018</width>
+    <height>873</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -33,7 +33,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Aply</string>
+     <string>Apply</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelTitulo">
@@ -56,19 +56,6 @@
     <property name="text">
      <string>WELCOME TO THE BEST IMAGE PROCESSOR 
 OF ALL THE TIMES</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>110</y>
-      <width>381</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Write the name of te image (with the .nii format)</string>
     </property>
    </widget>
    <widget class="QSpinBox" name="ejeX">
@@ -135,8 +122,8 @@ OF ALL THE TIMES</string>
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>150</y>
-      <width>341</width>
+      <y>110</y>
+      <width>261</width>
       <height>31</height>
      </rect>
     </property>
@@ -278,9 +265,9 @@ OF ALL THE TIMES</string>
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
+      <y>150</y>
       <width>341</width>
-      <height>71</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
@@ -339,6 +326,44 @@ OF ALL THE TIMES</string>
      </property>
      <property name="text">
       <string>Histogram Matching</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="histogramSpinB">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>50</y>
+       <width>42</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>3</number>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="HisComboBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>80</y>
+       <width>101</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="maxVisibleItems">
+      <number>4</number>
      </property>
     </widget>
    </widget>
@@ -596,7 +621,7 @@ OF ALL THE TIMES</string>
       <number>1</number>
      </property>
      <property name="maximum">
-      <number>99</number>
+      <number>100</number>
      </property>
      <property name="value">
       <number>8</number>
@@ -783,6 +808,19 @@ OF ALL THE TIMES</string>
       <number>3</number>
      </property>
     </widget>
+    <widget class="QRadioButton" name="gmmRB">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>GMM</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
@@ -894,13 +932,136 @@ OF ALL THE TIMES</string>
      <string>Show Borders</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="searchButton">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>110</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Search</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>710</y>
+      <width>511</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Register</string>
+    </property>
+    <widget class="QPushButton" name="registerButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>30</y>
+       <width>91</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Register</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="inputLDireccionI_2">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>30</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="searchButton_2">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>70</y>
+       <width>75</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Search</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="downloadButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>101</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Download Image</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>10</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Flair Image</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ImageDownLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="savedImaLabel">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>740</y>
+      <width>311</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1016</width>
+     <width>1018</width>
      <height>21</height>
     </rect>
    </property>

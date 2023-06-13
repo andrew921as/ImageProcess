@@ -35,37 +35,43 @@ def medianFilter (image):
 
 def medianFilterBorders (image):
   # Median Filter with borders
-	filteredImage = np.zeros_like(image)
+	threshold = 2500
+	filtered_image = np.zeros_like(image)
 
-#threshold = 500
+	for x in range(1, image.shape[0] - 2):
+		for y in range(1, image.shape[1] - 2):
+			for z in range(1, image.shape[2] - 2):
+        # Compute the derivatives in x, y, and z directions
+				dx = image[x + 1, y, z] - image[x - 1, y, z]
+				dy = image[x, y + 1, z] - image[x, y - 1, z]
+				dz = image[x, y, z + 1] - image[x, y, z - 1]
 
-# Estimate the standard deviation of the pixel intensity
-	std = np.std(image)
+        # Compute the magnitude of the gradient
+				magnitude = np.sqrt(dx * dx + dy * dy + dz * dz)
 
-	for x in range(1, image.shape[0]-2):
-		for y in range(1, image.shape[1]-2):
-			for z in range(1, image.shape[2]-2):
-				# Compute the derivatives in x, y, and z directions
-				dx = image[x+1, y, z] - image[x-1, y, z]
-				dy = image[x, y+1, z] - image[x, y-1, z]
-				dz = image[x, y, z+1] - image[x, y, z-1]
+                    # Separate pixels based on the current threshold
+				below_threshold = magnitude[magnitude < threshold]
+				above_threshold = magnitude[magnitude >= threshold]
 
-				#Compute the magnitude of the gradient
-				magnitude = np.sqrt(dx*dx + dy*dy + dz*dz)
+				# if below_threshold.size > 0 and above_threshold.size > 0:
+        #             # Calculate the new threshold as the average of below_threshold and above_threshold
+				# 	threshold = (np.mean(below_threshold) + np.mean(above_threshold)) / 2
+				# elif below_threshold.size > 0:
+				# 	threshold = np.mean(below_threshold)
+				# elif above_threshold.size > 0:
+				# 	threshold = np.mean(above_threshold)
+				# else:
+				# 	threshold = threshold
+				threshold = (np.mean(below_threshold) + np.mean(above_threshold)) / 2
 
-            
-				# Compute the threshold using a fraction of the standard deviation
-				threshold = 3 * std
-
-				# If the magnitude is below the threshold, apply median filter
 				if magnitude < threshold:
 					neighbours = []
 					for dx in range(-1, 2):
 						for dy in range(-1, 2):
 							for dz in range(-1, 2):
-								neighbours.append(image[x+dx, y+dy, z+dz])
+								neighbours.append(image[x + dx, y + dy, z + dz])
 					median = np.median(neighbours)
-					filteredImage[x, y, z] = median
+					filtered_image[x, y, z] = median
 				else:
-					filteredImage[x, y, z] = image[x, y, z]
-	return filteredImage
+					filtered_image[x, y, z] = image[x, y, z]
+	return filtered_image

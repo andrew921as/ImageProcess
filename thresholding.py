@@ -4,25 +4,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def isodata(image, tol, ta):	
-		tau = ta/100
-		istrue=True
-		while istrue:
+    tau = ta/100
+    istrue=True
+    while istrue:
 			#print(tau)
 
-			segmentation = image >= tau
-			mBG = image[np.multiply(image > 0.001, segmentation == 0)].mean()
-			mFG = image[np.multiply(image > 0.001, segmentation == 1)].mean()
+        segmentation = image >= tau
+        mBG = image[np.multiply(image > 0.001, segmentation == 0)].mean()
+        mFG = image[np.multiply(image > 0.001, segmentation == 1)].mean()
 
-			tau_post = 0.5 * (mBG + mFG)
+        tau_post = 0.5 * (mBG + mFG)
 
-			if np.abs(tau - tau_post) < tol:
-				istrue=False
-				return tau
-			if (not tau_post) :
-				istrue=False
-				return tau
-			else:
-				tau = tau_post
+        if np.abs(tau - tau_post) < tol:
+            istrue=False
+            return tau
+        if (not tau_post) :
+            istrue=False
+            return tau
+        else:
+            tau = tau_post
 
 def regionGrowing (image, x, y, z, tol):
 	# Region Growing
@@ -78,6 +78,57 @@ def kMeans (image, iterations,ks ):
 	# 	k2 = image[segmentation == 1].mean()
 	# 	k3 = image[segmentation == 2].mean()
 	# 	return segmentation
+
+def gaussian(x, mu, sigma):
+    """
+    Computes the probability density function of a Gaussian distribution.
+
+    :param x: Input data.
+    :param mu: Mean of the Gaussian distribution.
+    :param sigma: Standard deviation of the Gaussian distribution.
+    :return: Probability density function values for the input data.
+    """
+    return np.exp(-0.5 * ((x - mu) / sigma) ** 2) / (sigma * np.sqrt(2 * np.pi))
+
+def gmm(image, k, num_iterations, threshold=0.01):
+    """
+    Segments an image into multiple classes using a Gaussian Mixture Model.
+
+    :param image: Input image data.
+    :param k: Number of classes to segment the image into.
+    :param num_iterations: Maximum number of iterations to run the algorithm for (default: 100).
+    :param threshold: Convergence threshold for the algorithm (default: 0.01).
+    :return: Segmented image data.
+    """
+    # Initialize parameters
+    num_voxels = np.prod(image.shape)
+    mu = np.linspace(image.min(), image.max(), k)
+    sigma = np.ones(k) * (image.max() - image.min()) / (2 * k)
+    p = np.ones(k) / k
+    q = np.zeros((num_voxels, k))
+
+    # Run the algorithm
+    for i in range(num_iterations):
+        # Calculate responsibilities
+        for k in range(k):
+            q[:, k] = p[k] * gaussian(image.flatten(), mu[k], sigma[k])
+        q = q / np.sum(q, axis=1)[:, np.newaxis]
+
+        # Update parameters
+        n = np.sum(q, axis=0)
+        p = n / num_voxels
+        mu = np.sum(q * image.flatten()[:, np.newaxis], axis=0) / n
+        sigma = np.sqrt(np.sum(q * (image.flatten()[:, np.newaxis] - mu) ** 2, axis=0) / n)
+
+        # Check for convergence
+        if np.max(np.abs(p - q.sum(axis=0) / num_voxels)) < threshold:
+            break
+
+    # Generate segmentation
+    segmentation = np.argmax(q, axis=1)
+    segmentation = segmentation.reshape(image.shape)
+
+    return segmentation
 
 def borders(image_data):
 	dfdx = np.zeros_like(image_data)
