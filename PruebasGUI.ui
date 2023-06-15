@@ -624,7 +624,7 @@ OF ALL THE TIMES</string>
       <number>100</number>
      </property>
      <property name="value">
-      <number>8</number>
+      <number>10</number>
      </property>
     </widget>
     <widget class="QSpinBox" name="zSpinB">
@@ -805,7 +805,7 @@ OF ALL THE TIMES</string>
       <number>99</number>
      </property>
      <property name="value">
-      <number>3</number>
+      <number>4</number>
      </property>
     </widget>
     <widget class="QRadioButton" name="gmmRB">
@@ -860,7 +860,7 @@ OF ALL THE TIMES</string>
       <string>Median</string>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QRadioButton" name="medianBorderFilterRB">
@@ -876,7 +876,7 @@ OF ALL THE TIMES</string>
       <string>Median with Borders</string>
      </property>
      <property name="checked">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QRadioButton" name="noneFilterRB">
@@ -1020,12 +1020,12 @@ OF ALL THE TIMES</string>
       <rect>
        <x>160</x>
        <y>10</y>
-       <width>81</width>
+       <width>131</width>
        <height>21</height>
       </rect>
      </property>
      <property name="text">
-      <string>Flair Image</string>
+      <string>Folder with FLAIR and IR</string>
      </property>
     </widget>
     <widget class="QLabel" name="ImageDownLabel">
@@ -1045,14 +1045,37 @@ OF ALL THE TIMES</string>
    <widget class="QLabel" name="savedImaLabel">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>740</y>
+      <x>310</x>
+      <y>790</y>
       <width>311</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>710</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Volumenes:</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listItem">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>710</y>
+      <width>256</width>
+      <height>121</height>
+     </rect>
     </property>
    </widget>
   </widget>

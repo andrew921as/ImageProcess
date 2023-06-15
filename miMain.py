@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 from thresholding import isodata, regionGrowing, kMeans, gmm, borders
 from preProcesing import Rescaling, ZScore, WhiteStripe, histogramMatching
 from denoising import meanFilter,medianFilter,medianFilterBorders
-from register import rigid_register
+from register import MakeRegister
 
 #Procesamiento de las imagenes
 import nibabel as nib
@@ -90,60 +90,41 @@ class MiEjemplo(QMainWindow):
     self.imagePath = fileName[0]
   
   def browsefileRegister(self):
-    fileName = QFileDialog.getOpenFileName(self,'Open file', 'C:')
-    self.inputLDireccionI_2.setText(fileName[0])
+    fileName = QFileDialog.getExistingDirectory(self,'Open folder', 'C:')
+    self.inputLDireccionI_2.setText(fileName)
     
   def dowloadImage(self):
     imageUploaded = nib.load(self.imagePath)
     affine = imageUploaded.affine
     reconstructed_image = nib.Nifti1Image(self.image.astype(np.float32), affine)
-    output_path = os.path.join("segmentatedImgs", "Registered_FLAIR.nii.gz")
+    output_path = os.path.join("segmentatedImgs", "segmentated.nii.gz")
     nib.save(reconstructed_image, output_path)
     
     self.inputLDireccionI_2.setEnabled(True)
     self.searchButton_2.setEnabled(True)
     self.registerButton.setEnabled(True)
     self.ImageDownLabel.setText("Image Downloaded")
+  
+  def volumes(self,imagePath):
+    imageNoData= nib.load(imagePath)
+    image_data_FLAIR=imageNoData.get_fdata()
+    for i in range (self.KsSpinB.value()+1):
+      count= np.count_nonzero(image_data_FLAIR.astype(np.int32) == i)
+      tamaño_voxel = np.abs(imageNoData.affine.diagonal()[:3])
+      volumen_en_mm3 = count * np.prod(tamaño_voxel)
+      self.listItem.addItem("Label"+str(i)+": "+str(count)+", Volumen: "+str(volumen_en_mm3))
     
   def registerFunction(self):
-    if (os.path.exists(self.inputLDireccionI_2.text())):
+    if (os.path.exists(self.inputLDireccionI_2.text()+"/FLAIR.nii.gz")):
       fixedImagePath= self.inputLDireccionI_2.text()
-      movingSegmentate = "segmentatedImgs/Registered_FLAIR.nii.gz"
+      movingImagePath=(self.imagePath)
+      movingSegmentate = "segmentatedImgs/segmentated.nii.gz"
       #movingSegmentate = "segmentatedImgs/gaussian_segmentation.nii.gz"
       #finalimagePath = rigid_register(fixedImagePath,movingImagePath,movingSegmentate)
-      finalimagePath = rigid_register(fixedImagePath,movingSegmentate)
-      
-      # imageUploaded = nib.load(finalimagePath)
-      # imageData = imageUploaded.get_fdata()
-      # aImage= None
-
-      # if self.isodataRB.isChecked():
-      #   valueTolerance = self.toleSpinB.value()
-      #   valueTau = self.tauSpinB.value()
-      #   aImage = imageData >= isodata(imageData,valueTolerance,valueTau)      
-      # if self.kmeansRB.isChecked():
-      #   iterations = self.iterationsSpinB.value()
-      #   ks = self.KsSpinB.value()
-      #   aImage = kMeans(imageData,iterations,ks)      
-      # if self.gmmRB.isChecked():
-      #   iterations = self.iterationsSpinB.value()
-      #   ks = self.KsSpinB.value()
-      #   aImage = gmm(imageData,ks,iterations)      
-      # if self.regionRB.isChecked():
-      #   tolerance = self.toleSpinB.value()
-      #   x = self.xSpinB.value()
-      #   y = self.ySpinB.value()
-      #   z = self.zSpinB.value()
-      #   aImage = regionGrowing(imageData,x,y,z,tolerance)
-      # affine = imageUploaded.affine
-      # reconstructed_image = nib.Nifti1Image(aImage.astype(np.float32), affine)
-      # output_path = os.path.join("segmentatedImgs", "Registered_FLAIR.nii.gz")
-      # nib.save(reconstructed_image, output_path)
-      
-      # nifti_img = nib.Nifti1Image(aImage.astype(np.float32), affine=np.eye(4))
-      # output_image_path = 'Registered_FLAIR.nii.gz'
-      # nib.save(nifti_img, output_image_path)
-      self.savedImaLabel.setText("Images registered in ./registered_image.nii.gz")
+      finalimagePath = MakeRegister(fixedImagePath,movingImagePath,movingSegmentate)
+   
+      self.savedImaLabel.setText("Images registered in "+finalimagePath)
+      self.volumes(finalimagePath)
   def uploadImage(self):
     if (os.path.exists(self.inputLDireccionI.text())):
         imageUploaded = nib.load(self.inputLDireccionI.text()).get_fdata()
@@ -407,6 +388,8 @@ class MiEjemplo(QMainWindow):
       self.image = regionGrowing(self.normalImage,x,y,z,tolerance)      
       myIAxes =self.myAxesI()
       self.plotOnCanvas(myIAxes)
+    self.ImageDownLabel.setText(" ")
+    self.savedImaLabel.setText(" ")
 
   def myAxesI(self):
     valueX = self.ejeX.value()
